@@ -31,7 +31,7 @@
 // increase delay -- slower
 // decrease delay -- faster, but there is a limit before 
 // it starts skipping steps
-#define STEP_PERIOD_US 1000
+#define STEP_PERIOD_US 1000 //speed is set by step period, max freq is 25kHz so pick period acordingly, min period is 40us
 
 static const char *TAG = "STEPPER";
 
@@ -244,6 +244,7 @@ void stepper_task_no_button(void *pvParameters){
     }
 }
 
+
 void app_main(void)
 {
     button_queue = xQueueCreate(10, sizeof(bool));
@@ -253,5 +254,6 @@ void app_main(void)
     setDirection(1);
 
     printf("Toggle button on GPIO %d", PIN_NUM_INPUT);
-    xTaskCreate(stepper_task, "stepper_task", 2048, NULL, 5, NULL);
+    //switch stepper_task to stepper_task_no_button for pulses no button input, stepper_task for button input
+    xTaskCreate(stepper_task_no_button, "stepper_task", 2048, NULL, 5, NULL);
 }
